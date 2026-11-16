@@ -80,4 +80,4 @@ publishing requires committing and pushing the changes.
 pre-commit install
 ```
 
-The existing repository hooks remain available for YAML and Markdown checks.
+The repository hooks check YAML, trailing whitespace, file endings, and large files.
