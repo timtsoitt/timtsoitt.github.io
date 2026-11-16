@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://timtsoitt.github.io/sitemap-index.xml

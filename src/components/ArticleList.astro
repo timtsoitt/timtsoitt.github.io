@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDate, readingTime } from '../lib/articles';
+interface Props { articles: CollectionEntry<'articles'>[]; }
+const { articles } = Astro.props;
+---
+<div class="article-list">
+  {articles.map((article, index) => (
+    <article class="article-row">
+      <span class="article-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <div class="article-summary">
+        <div class="article-meta"><time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time><span>·</span><span>{readingTime(article.body)} min read</span></div>
+        <h3><a href={`/articles/${article.id}/`}>{article.data.title}<span class="article-arrow" aria-hidden="true">↗</span></a></h3>
+        <p>{article.data.description}</p>
+        <div class="tags">{article.data.tags.map((tag) => <span>{tag}</span>)}</div>
+      </div>
+    </article>
+  ))}
+  {articles.length === 0 && <p class="empty-state">No articles published yet.</p>}
+</div>

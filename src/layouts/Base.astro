@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+import { site } from '../site';
+
+interface Props { title?: string; description?: string; article?: boolean; }
+const { title, description = site.description, article = false } = Astro.props;
+const pageTitle = title ? `${title} — ${site.title}` : site.title;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f8f7f3" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={site.title} href="/rss.xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta name="twitter:card" content="summary" />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header wrap">
+      <a class="wordmark" href="/" aria-label={`${site.title} home`}><span class="brand-icon" aria-hidden="true">t.</span> {site.title}<span class="brand-dot" aria-hidden="true">●</span></a>
+      <nav aria-label="Main navigation">
+        <a href="/articles/" aria-current={path.startsWith('/articles') ? 'page' : undefined}>Writing</a>
+        <a class="github-link" href={site.github}>GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+    <main id="main" class="wrap"><slot /></main>
+    <footer class="site-footer wrap">
+      <div><a class="footer-name" href="/">{site.title}</a><p>A little corner of the internet. Built with curiosity.</p></div>
+      <div class="footer-links"><a href="/rss.xml">RSS feed ↗</a><a href={site.github}>GitHub ↗</a><span>© {new Date().getFullYear()} {site.name}</span></div>
+    </footer>
+  </body>
+</html>
