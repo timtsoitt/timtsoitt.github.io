@@ -1,0 +1,262 @@
+---
+title: "Why I Had to Rewrite 100+ Security Policies for Terraform"
+description: "Understanding the basics of Terraform made it possible to enforce security policies across 400+ deployments a day."
+date: 2026-11-17
+tags: [Terraform, Policy as Code, Open Policy Agent]
+draft: true
+---
+
+I first used Atlantis when I joined my current company. It’s an open-source tool for automating Terraform workflows. Before that, I’d managed our Terraform Cloud and Spacelift setups, both paid SaaS platforms.
+
+Our Atlantis workflow had an OPA policy check that blocked PRs when it found a security violation. I was happy to see it. I’d wanted to build something similar at my previous company, but left before it happened.
+
+But I soon realised this was just another box-ticking security check.
+
+## Why the checks failed
+
+### Existing violations blocked unrelated work
+
+The policies were copied from an open-source repository. One rejected EC2 instances with public IPs. Most of our instances didn’t need one, so the rule made sense. The trouble was how it ran:
+
+1. An existing instance already had a public IP.
+2. Someone changed an unrelated resource in the same Terraform project.
+3. The policy flagged the instance and blocked their PR.
+
+The PR author couldn’t safely remove the IP from a system they might not own or understand. But they couldn’t merge their change without dealing with it. This happened often in our large, shared Terraform projects.
+
+They were being asked to fix someone else’s infrastructure just to get their own work done.
+
+### The workaround became a bypass
+
+<div class="code-example">
+<div class="code-example-text">
+
+The maintainers wrote their own workaround: a JSON file listing exempt resources under each policy namespace, and a script that stripped matching findings from the scan results.
+
+People could get their PRs through by adding a resource to the file. No review, reason, or ticket required. The list grew, and the checks stopped applying to more and more resources.
+
+<aside class="callout" aria-label="A brief rant">
+<p class="callout-label">A brief rant</p>
+
+If you’re already spotting other problems with this setup, I’m not surprised. There was plenty wrong with it.
+
+</aside>
+
+</div>
+<figure class="code-example-code">
+
+```json
+{
+  "aws.ec2.no_public_ip": [
+    "aws_instance.this",
+    "aws_instance.legacy",
+    "aws_instance.bastion",
+    "module.shared.aws_instance.worker"
+  ],
+  "aws.ec2.encrypted_volumes": [
+    "aws_instance.this",
+    "aws_instance.legacy",
+    "module.batch.aws_instance.worker"
+  ],
+  "aws.s3.block_public_access": [
+    "aws_s3_bucket.public_assets",
+    "aws_s3_bucket.legacy_uploads",
+    "module.shared.aws_s3_bucket.exports"
+  ]
+}
+```
+
+<figcaption>Example: <code>aws_instance.this</code> bypasses both the public IP and encrypted volume checks.</figcaption>
+</figure>
+</div>
+
+## The rewrite
+
+About six months later, I took over the setup and immediately decided to rewrite all 100+ policies. Yes, another engineer turning up and deciding to rewrite everything. I still think it was one of the best technical decisions I’ve made.
+
+### Use the plan as the baseline
+
+Terraform already had the information I needed. The [plan JSON](https://developer.hashicorp.com/terraform/internals/json-format#change-representation) includes `before` and `after` values for each resource change. I could compare them to see whether a PR introduced a violation or left an existing one alone.
+
+I used `resource_changes[].change.actions` to decide what to check:
+
+| Terraform actions                                                    | Policy handling                                                                                        |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `["no-op"]`<br />`["read"]`<br />`["delete"]`                        | Skip these setting checks. Deletions may still require other security checks.                          |
+| `["create"]`                                                         | Check `after` for violations.                                                                          |
+| `["update"]`<br />`["delete", "create"]`<br />`["create", "delete"]` | For updates and either replacement order, compare `before` and `after`; check only changed attributes. |
+
+### An EC2 example
+
+#### A tag change should pass
+
+<div class="code-example">
+<div class="code-example-text">
+
+In this shortened plan, someone changes the `Owner` tag from `"platform"` to `"infrastructure"`. The public IP setting stays `true`.
+
+The old check saw `true` and rejected the PR. My check compares the two values: the PR didn’t enable the public IP, so it passes.
+
+</div>
+<div class="code-example-code">
+
+```json
+{
+  "resource_changes": [
+    {
+      "address": "aws_instance.example",
+      "mode": "managed",
+      "type": "aws_instance",
+      "change": {
+        "actions": ["update"],
+        "before": {
+          "associate_public_ip_address": true,
+          "tags": { "Owner": "platform" }
+        },
+        "after": {
+          "associate_public_ip_address": true,
+          "tags": { "Owner": "infrastructure" }
+        }
+      }
+    }
+  ]
+}
+```
+
+</div>
+</div>
+
+#### Enabling a public IP should fail
+
+<div class="code-example">
+<div class="code-example-text">
+
+Here, Terraform will delete the instance and create its replacement. The public IP setting changes from `false` to `true`. This PR should be blocked.
+
+For a new instance, the action is `["create"]` and `before` is `null`. There’s nothing to compare, so I check `after` directly.
+
+</div>
+<div class="code-example-code">
+
+```json
+{
+  "resource_changes": [
+    {
+      "address": "aws_instance.example",
+      "mode": "managed",
+      "type": "aws_instance",
+      "change": {
+        "actions": ["delete", "create"],
+        "before": {
+          "associate_public_ip_address": false
+        },
+        "after": {
+          "associate_public_ip_address": true
+        }
+      }
+    }
+  ]
+}
+```
+
+</div>
+</div>
+
+### The Rego change
+
+#### Before: check the resulting value
+
+<div class="code-example">
+<div class="code-example-text">
+
+I’ve simplified the policies here to show the difference. These examples use [Rego v1 syntax](https://www.openpolicyagent.org/docs/v0-upgrade), with the plan JSON as `input`.
+
+The old rule checks managed EC2 instances. If the planned public IP setting is `true`, it adds a message to `deny`, which the policy-check step uses to reject the PR.
+
+It doesn’t look at the action or the previous value. Even a tag update or a `["no-op"]` can fail.
+
+</div>
+<div class="code-example-code">
+
+```rego
+package main
+
+import rego.v1
+
+deny contains msg if {
+    some resource in input.resource_changes
+    resource.mode == "managed"
+    resource.type == "aws_instance"
+    resource.change.after.associate_public_ip_address == true
+
+    msg := sprintf("%s must not have a public IP", [resource.address])
+}
+```
+
+</div>
+</div>
+
+#### After: check what the change introduces
+
+<div class="code-example">
+<div class="code-example-text">
+
+I added `introduces_public_ip` to the rule. Either of its two definitions can match:
+
+- A new instance with the public IP setting enabled.
+- An update or replacement that changes the setting from `false` to `true`.
+
+Keeping an existing `true` setting doesn’t match. Neither do no-ops, reads, or deletions.
+
+I’ve kept these examples to known booleans. Omitted settings, provider defaults, and values unknown until apply need their own handling. A missing value isn’t the same as `false`.
+
+The existing public IP still needs attention. It just doesn’t have to hold up this PR.
+
+</div>
+<div class="code-example-code">
+
+```rego
+package main
+
+import rego.v1
+
+deny contains msg if {
+    some resource in input.resource_changes
+    resource.mode == "managed"
+    resource.type == "aws_instance"
+    resource.change.after.associate_public_ip_address == true
+    introduces_public_ip(resource.change)
+
+    msg := sprintf("%s must not enable a public IP", [resource.address])
+}
+
+# A new resource has no existing setting to preserve.
+introduces_public_ip(change) if {
+    change.actions == ["create"]
+}
+
+# Updates and replacements must change the setting from false to true.
+introduces_public_ip(change) if {
+    change.actions in {
+        ["update"],
+        ["delete", "create"],
+        ["create", "delete"],
+    }
+    change.before.associate_public_ip_address == false
+}
+```
+
+</div>
+</div>
+
+## What made the difference
+
+**Understand the technology you’re working with.** The fix came from using information that was already in the plan. We didn’t need another file to track exceptions or a script to edit the results. We needed the checks to use what Terraform was telling us.
+
+**Security checks need engineering, too.** I don’t blame the open-source policies for this. We copied them into our workflow without doing the work to make them fit. The same goes for any tool we bring in: we own the testing and the problems it causes. Here, we left those problems to whoever opened the next PR.
+
+## A side note
+
+I also built a test framework to make policy test cases easier to write. That helped me get to zero false positives and stay there for more than 10 months. We run over 400 deployments a day. Every false positive meant someone had to stop and get manual approval, so a small error rate could waste a lot of people’s time.
+
+I’ve kept working on these policies for several years, and some requirements have taken a fair bit of figuring out in Rego. These days, OPA questions usually end up on my desk.
