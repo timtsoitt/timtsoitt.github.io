@@ -3,7 +3,6 @@ title: "Why I Had to Rewrite 100+ Security Policies for Terraform"
 description: "Understanding the basics of Terraform made it possible to enforce security policies across 400+ deployments a day."
 date: 2026-11-17
 tags: [Terraform, Policy as Code, Open Policy Agent]
-draft: true
 ---
 
 I first used Atlantis when I joined my current company. It’s an open-source tool for automating Terraform workflows. Before that, I’d managed our Terraform Cloud and Spacelift setups, both paid SaaS platforms.
