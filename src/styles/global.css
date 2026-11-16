@@ -49,6 +49,8 @@ h2 { font-size: 31px; line-height: 1.2; font-weight: 500; letter-spacing: -1px; 
 .article-number { font: 11px ui-monospace, monospace; color: #83887e; padding-top: 4px; min-width: 20px; }
 .article-summary { flex: 1; min-width: 0; }
 .article-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 9px; color: var(--muted); font-size: 11px; margin-bottom: 11px; }
+.view-count { font-variant-numeric: tabular-nums; }
+.article-meta > .view-count::before { content: '·'; margin-right: 9px; }
 .article-row h3 { font-size: 23px; font-weight: 500; letter-spacing: -.6px; line-height: 1.35; margin-bottom: 10px; }
 .article-row h3 a { display: flex; justify-content: space-between; gap: 20px; }
 .article-row h3 a:hover { color: var(--green); }

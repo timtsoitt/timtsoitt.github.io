@@ -61,8 +61,33 @@ No sample articles are published. Copy `templates/article.md` into
 - `astro.config.mjs`: public URL and Astro integrations.
 - `public/robots.txt`: sitemap URL (update if changing domains).
 
-Typography uses Google Fonts with system fallbacks. Articles require no
+Typography uses Google Fonts with system fallbacks. Article content works without
 client-side JavaScript. RSS is available at `/rss.xml`.
+
+## View counts
+
+[GoatCounter](https://timtsoitt.goatcounter.com/) supplies the public count in
+each article's metadata. There is no site-wide footer total. Enable **Allow adding
+visitor counts on your website** in GoatCounter's site settings to expose the
+counts, while keeping the dashboard private. This setting allows public access
+to page counts; it does not publish the referrer report.
+
+Counts stay hidden until the service responds, including when JavaScript is
+disabled, the service is unavailable, or a blocker prevents it from loading.
+GoatCounter counts visits rather than every reload, and public counts can be
+cached for up to four hours. A newly tracked article may stay hidden until its
+count becomes available. Counts are maintained by GoatCounter, not this repository.
+
+## Private analytics
+
+[GoatCounter](https://timtsoitt.goatcounter.com/) collects visits and referring
+sites for the owner's dashboard. Its script loads only in production on the
+hostname configured in `astro.config.mjs`, excluding local previews. No analytics
+dashboard or referrer data is embedded in the website. Keep GoatCounter's dashboard
+visibility set to private in its account settings.
+
+Tracking begins after deployment and can be blocked by visitors' browsers or
+extensions. Some visits have no available referrer.
 
 ## GitHub Pages
 

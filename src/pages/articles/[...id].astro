@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ViewCount from '../../components/ViewCount.astro';
 import { getArticles, formatDate, readingTime } from '../../lib/articles';
 
 export async function getStaticPaths() {
@@ -16,7 +17,7 @@ const contents = headings.filter(({ depth }) => depth === 2 || depth === 3);
     <header class="post-header">
       <div class="post-header-copy">
         <a class="text-link back-link" href="/articles/">← All writing</a>
-        <div class="article-meta"><time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time><span>·</span><span>{readingTime(article.body)} min read</span></div>
+        <div class="article-meta"><time datetime={article.data.date.toISOString()}>{formatDate(article.data.date)}</time><span>·</span><span>{readingTime(article.body)} min read</span><ViewCount /></div>
         <h1>{article.data.title}</h1><p class="post-description">{article.data.description}</p>
         <div class="tags">{article.data.tags.map((tag: string) => <span>{tag}</span>)}</div>
       </div>

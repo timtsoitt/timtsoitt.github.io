@@ -41,5 +41,34 @@ const path = Astro.url.pathname;
       <div><a class="footer-name" href="/">{site.title}</a><p>A little corner of the internet. Built with curiosity.</p></div>
       <div class="footer-links"><a href="/rss.xml">RSS feed ↗</a><a href={site.github}>GitHub ↗</a><span>© {new Date().getFullYear()} {site.name}</span></div>
     </footer>
+    {import.meta.env.PROD && <script is:inline define:vars={{ publicHost: canonical.hostname }}>
+      // Keep local development and preview visits out of analytics.
+      if (window.location.hostname === publicHost) {
+        const analytics = document.createElement('script');
+        analytics.async = true;
+        analytics.src = 'https://gc.zgo.at/count.js';
+        analytics.setAttribute('data-goatcounter', 'https://timtsoitt.goatcounter.com/count');
+        document.body.appendChild(analytics);
+
+        const counter = document.querySelector('[data-view-path]');
+        if (counter) {
+          const path = counter.getAttribute('data-view-path');
+          fetch('https://timtsoitt.goatcounter.com/counter/' + encodeURIComponent(path) + '.json', {
+            credentials: 'omit',
+            signal: AbortSignal.timeout(8000),
+          })
+            .then(response => {
+              if (!response.ok) throw new Error('View count unavailable');
+              return response.json();
+            })
+            .then(data => {
+              if (typeof data.count !== 'string' || !data.count.trim()) return;
+              counter.textContent = data.count + ' views';
+              counter.hidden = false;
+            })
+            .catch(() => { /* Keep unavailable counts hidden. */ });
+        }
+      }
+    </script>}
   </body>
 </html>
