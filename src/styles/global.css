@@ -113,7 +113,7 @@ h2 { font-size: 31px; line-height: 1.2; font-weight: 500; letter-spacing: -1px; 
 }
 @media (max-width: 640px) {
   .wrap { width: calc(100% - 40px); }
-  .site-header { min-height: 85px; gap: 12px; }
+  .site-header { min-height: 85px; gap: 12px; flex-wrap: wrap; padding-block: 16px; }
   .wordmark { font-size: 14px; gap: 8px; }
   .brand-icon { width: 28px; height: 28px; font-size: 23px; line-height: 25px; }
   .brand-dot, .github-link { display: none; }
