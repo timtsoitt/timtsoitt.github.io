@@ -1,11 +1,30 @@
 ---
-import Base from '../../layouts/Base.astro';
-import ArticleList from '../../components/ArticleList.astro';
-import { getArticles } from '../../lib/articles';
+import Base from "../../layouts/Base.astro";
+import ArticleList from "../../components/ArticleList.astro";
+import { getArticles } from "../../lib/articles";
 const articles = await getArticles();
 ---
-<Base title="Writing" description="Technical articles and notes from Tim’s notebook.">
-  <section class="page-intro"><p class="eyebrow">THE NOTEBOOK</p><h1>Writing<span class="accent-period">.</span></h1><p>Exploring the details. Connecting the dots.<br />Technical articles and notes, collected in one place.</p></section>
-  <div class="section-heading archive-heading"><h2 class="eyebrow">ALL ARTICLES</h2><span class="count">{articles.length} {articles.length === 1 ? 'article' : 'articles'}</span></div>
+
+<Base
+  title="Writing"
+  description="Technical articles and notes from Tim’s notebook."
+>
+  <section class="page-intro">
+    <p class="eyebrow">THE NOTEBOOK</p>
+    <h1>
+      Writing<span class="accent-period">.</span>
+    </h1>
+    <p>
+      Exploring the details. Connecting the dots.
+      <br />
+      Technical articles and notes, collected in one place.
+    </p>
+  </section>
+  <div class="section-heading archive-heading">
+    <h2 class="eyebrow">ALL ARTICLES</h2>
+    <span class="count">
+      {articles.length} {articles.length === 1 ? "article" : "articles"}
+    </span>
+  </div>
   <ArticleList articles={articles} />
 </Base>

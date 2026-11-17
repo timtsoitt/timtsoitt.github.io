@@ -1,27 +1,59 @@
 ---
-import Base from '../layouts/Base.astro';
-import ArticleList from '../components/ArticleList.astro';
-import { getArticles } from '../lib/articles';
-import { site } from '../site';
+import Base from "../layouts/Base.astro";
+import ArticleList from "../components/ArticleList.astro";
+import { getArticles } from "../lib/articles";
+import { site } from "../site";
 const articles = await getArticles();
 ---
+
 <Base>
   <section class="hero" aria-labelledby="intro-title">
     <div class="hero-copy">
-      <p class="eyebrow"><span class="tiny-dot"></span> A PERSONAL NOTEBOOK</p>
-      <h1 id="intro-title">Hi, I’m {site.name}.<br />Let’s make sense<br />of <span class="serif-accent">the details.</span></h1>
-      <p class="hero-description">Technical notes, useful ideas, and things worth sharing.<br class="desktop-break" /> A space to explore how things work, one article at a time.</p>
-      <a class="button" href="/articles/">Explore the writing <span aria-hidden="true">↗</span></a>
+      <p class="eyebrow">
+        <span class="tiny-dot"></span> A PERSONAL NOTEBOOK
+      </p>
+      <h1 id="intro-title">
+        Hi, I’m {site.name}.<br />
+        Let’s make sense
+        <br />
+        of <span class="serif-accent">the details.</span>
+      </h1>
+      <p class="hero-description">
+        Technical notes, useful ideas, and things worth sharing.
+        <br class="desktop-break" /> A space to explore how things work, one
+        article at a time.
+      </p>
+      <a class="button" href="/articles/">
+        Explore the writing <span aria-hidden="true">↗</span>
+      </a>
     </div>
     <div class="notebook-art" aria-hidden="true">
       <div class="art-corner">FIELD NOTES / 001</div>
-      <div class="orbital orbital-one"></div><div class="orbital orbital-two"></div>
-      <div class="art-symbol">{ '{' }<span>t</span>{ '}' }</div>
-      <div class="art-caption"><span>IDEAS → UNDERSTANDING</span><span>↗</span></div>
+      <div class="orbital orbital-one"></div>
+      <div class="orbital orbital-two"></div>
+      <div class="art-symbol">
+        {"{"}
+        <span>t</span>
+        {"}"}
+      </div>
+      <div class="art-caption">
+        <span>IDEAS → UNDERSTANDING</span>
+        <span>↗</span>
+      </div>
     </div>
   </section>
   <section class="writing-section" aria-labelledby="writing-title">
-    <div class="section-heading"><div><p class="eyebrow">FROM THE NOTEBOOK</p><h2 id="writing-title">Recent writing<span class="accent-period">.</span></h2></div><a class="text-link" href="/articles/">All articles <span aria-hidden="true">↗</span></a></div>
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">FROM THE NOTEBOOK</p>
+        <h2 id="writing-title">
+          Recent writing<span class="accent-period">.</span>
+        </h2>
+      </div>
+      <a class="text-link" href="/articles/">
+        All articles <span aria-hidden="true">↗</span>
+      </a>
+    </div>
     <ArticleList articles={articles.slice(0, 3)} />
   </section>
 </Base>

@@ -1,7 +1,7 @@
-import rss from '@astrojs/rss';
-import type { APIContext } from 'astro';
-import { getArticles } from '../lib/articles';
-import { site } from '../site';
+import rss from "@astrojs/rss";
+import type { APIContext } from "astro";
+import { getArticles } from "../lib/articles";
+import { site } from "../site";
 
 export async function GET(context: APIContext) {
   return rss({
