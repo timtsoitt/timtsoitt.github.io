@@ -7,5 +7,22 @@ repos:
         args: [--unsafe]
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        args: ["--markdown-linebreak-ext=md,mdx"]
       - id: check-added-large-files
-      - id: double-quote-string-fixer
+        args: [--maxkb=1024]
+      - id: check-merge-conflict
+      - id: check-json
+  - repo: https://github.com/mongodb/kingfisher
+    rev: v2.18.1
+    hooks:
+      - id: kingfisher-auto
+        args: [--no-validate, --redact]
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: v3.10.1
+    hooks:
+      - id: prettier
+        name: Prettier formatting check
+        entry: prettier --check --ignore-unknown
+        additional_dependencies:
+          - prettier@3.10.1
+          - prettier-plugin-astro@1.1.2

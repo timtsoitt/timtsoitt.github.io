@@ -101,8 +101,22 @@ publishing requires committing and pushing the changes.
 
 ## Optional pre-commit hooks
 
+Run `npm install` to install Prettier and its Astro plugin. Install
+[pre-commit](https://pre-commit.com/#install), then enable the hooks:
+
 ```sh
 pre-commit install
 ```
 
-The repository hooks check YAML, trailing whitespace, file endings, and large files.
+The repository hooks check YAML and JSON syntax, merge-conflict markers, trailing
+whitespace (preserving Markdown hard breaks), file endings, and files over 1 MiB.
+Kingfisher scans staged changes for secrets, with live credential validation disabled
+and secret values redacted in its output. Its official `kingfisher-auto` hook
+downloads and caches the binary on first use; no manual Kingfisher installation
+or Docker is required. The initial download requires network access.
+
+Prettier checks formatting of supported staged files, including Astro components,
+without rewriting them. Run `npm run format` to format the project or
+`npm run format:check` to check it. To format just one file, use
+`npx prettier --write src/pages/index.astro`.
+CI runs formatting, Astro checks, and the production build.
