@@ -26,7 +26,7 @@ const author = {
   "@id": `${home}#author`,
   name: site.name,
   url: authorUrl,
-  sameAs: [site.github, site.linkedin],
+  sameAs: [site.linkedin],
 };
 const structuredData = {
   "@context": "https://schema.org",
@@ -151,9 +151,6 @@ const structuredData = {
         >
           About
         </a>
-        <a class="github-link" href={site.github}>
-          GitHub <span aria-hidden="true">↗</span>
-        </a>
       </nav>
     </header>
     <main id="main" class="wrap">
@@ -168,7 +165,6 @@ const structuredData = {
       </div>
       <div class="footer-links">
         <a href="/rss.xml">RSS feed ↗</a>
-        <a href={site.github}>GitHub ↗</a>
         <span>
           © {new Date().getFullYear()} {site.name}
         </span>
