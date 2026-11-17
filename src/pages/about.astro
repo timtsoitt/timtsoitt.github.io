@@ -1,9 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
+import { site } from "../site";
 ---
 
 <Base
-  title="About"
+  title="About Tim Tsoi"
   description="Tim Tsoi is an engineer based in Japan, working across security, infrastructure, and software."
 >
   <section class="page-intro">
@@ -29,7 +30,7 @@ import Base from "../layouts/Base.astro";
       If you’d like to talk about security engineering or working together, you
       can find me on LinkedIn.
     </p>
-    <a class="button" href="https://www.linkedin.com/in/timtsoitt/">
+    <a class="button" href={site.linkedin}>
       Connect on LinkedIn <span aria-hidden="true">↗</span>
     </a>
   </section>
