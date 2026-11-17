@@ -95,13 +95,6 @@ nav a[aria-current="page"] {
   text-underline-offset: 7px;
   text-decoration-color: #83934c;
 }
-.github-link {
-  border-left: 1px solid var(--line);
-  padding-left: 30px;
-}
-.github-link span {
-  margin-left: 5px;
-}
 .hero {
   padding: 88px 0 94px;
   display: grid;
@@ -748,8 +741,7 @@ h2 {
     font-size: 23px;
     line-height: 25px;
   }
-  .brand-dot,
-  .github-link {
+  .brand-dot {
     display: none;
   }
   nav {

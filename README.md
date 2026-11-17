@@ -54,7 +54,7 @@ No sample articles are published. Copy `templates/article.md` into
 
 ## Customize
 
-- `src/site.ts`: site name, description, and GitHub link.
+- `src/site.ts`: site name, description, and LinkedIn link.
 - `src/pages/index.astro`: profile introduction and homepage.
 - `src/styles/global.css`: colors, typography, and responsive layouts.
 - `src/layouts/Base.astro`: navigation, metadata, and footer.
