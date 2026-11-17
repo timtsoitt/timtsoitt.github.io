@@ -2,58 +2,46 @@
 import Base from "../layouts/Base.astro";
 import ArticleList from "../components/ArticleList.astro";
 import { getArticles } from "../lib/articles";
-import { site } from "../site";
 const articles = await getArticles();
 ---
 
 <Base>
-  <section class="hero" aria-labelledby="intro-title">
-    <div class="hero-copy">
-      <p class="eyebrow">
-        <span class="tiny-dot"></span> A PERSONAL NOTEBOOK
+  <p class="home-mobile-intro">
+    I’m Tim, an engineer based in Japan.{" "}
+    <a class="text-link" href="/about/">
+      About me <span aria-hidden="true">↗</span>
+    </a>
+  </p>
+  <div class="home-layout">
+    <section class="writing-section" aria-labelledby="writing-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">FROM THE NOTEBOOK</p>
+          <h1 id="writing-title">
+            Recent writing<span class="accent-period">.</span>
+          </h1>
+        </div>
+        <a class="text-link" href="/articles/">
+          All articles <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+      <ArticleList articles={articles.slice(0, 3)} />
+    </section>
+    <aside class="home-about" aria-labelledby="intro-title">
+      <p class="eyebrow" id="intro-title">
+        ABOUT ME
       </p>
-      <h1 id="intro-title">
-        Hi, I’m {site.name}.<br />
-        Let’s make sense
-        <br />
-        of <span class="serif-accent">the details.</span>
-      </h1>
-      <p class="hero-description">
-        Technical notes, useful ideas, and things worth sharing.
-        <br class="desktop-break" /> A space to explore how things work, one
-        article at a time.
+      <p class="home-about-description">
+        I work across software, infrastructure, and security, so I’ve never fit
+        neatly into one engineering title.
       </p>
-      <a class="button" href="/articles/">
-        Explore the writing <span aria-hidden="true">↗</span>
+      <p class="home-about-description">
+        Member of Technical Staff feels about right—a little broad, but so is my
+        day job.
+      </p>
+      <a class="text-link" href="/about/">
+        More about me <span aria-hidden="true">↗</span>
       </a>
-    </div>
-    <div class="notebook-art" aria-hidden="true">
-      <div class="art-corner">FIELD NOTES / 001</div>
-      <div class="orbital orbital-one"></div>
-      <div class="orbital orbital-two"></div>
-      <div class="art-symbol">
-        {"{"}
-        <span>t</span>
-        {"}"}
-      </div>
-      <div class="art-caption">
-        <span>IDEAS → UNDERSTANDING</span>
-        <span>↗</span>
-      </div>
-    </div>
-  </section>
-  <section class="writing-section" aria-labelledby="writing-title">
-    <div class="section-heading">
-      <div>
-        <p class="eyebrow">FROM THE NOTEBOOK</p>
-        <h2 id="writing-title">
-          Recent writing<span class="accent-period">.</span>
-        </h2>
-      </div>
-      <a class="text-link" href="/articles/">
-        All articles <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-    <ArticleList articles={articles.slice(0, 3)} />
-  </section>
+    </aside>
+  </div>
 </Base>
