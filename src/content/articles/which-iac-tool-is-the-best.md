@@ -16,6 +16,15 @@ tags:
 
 I’ve used a lot of infrastructure as code (IaC) tools. The one I reach for depends on what I’m deploying, who owns the resources, and what needs to happen after the first deploy. Most of my examples are on AWS, from bootstrapping new accounts to managing installs in customer environments.
 
+Here’s how I choose an IaC tool for a deployment on AWS.
+
+<figure class="iac-mindmap">
+  <picture>
+    <source media="(max-width: 760px)" srcset="/diagrams/aws-iac-choices-compact.svg" width="420" height="622" />
+    <img class="iac-mindmap-image" src="/diagrams/aws-iac-choices.svg" width="1190" height="464" alt="AWS IaC decision diagram. For customer environments, consider Pulumi when you need to control the deployment workflow. Use StackSets for standard rollouts of the same CloudFormation template across accounts or Regions, and OpenTofu/Terraform for other standard customer deployments. For in-house environments, use StackSets for account bootstrapping, resource-specific controllers for application resources with a shared lifecycle on Kubernetes, and OpenTofu/Terraform for other resources." draggable="false" />
+  </picture>
+</figure>
+
 ## IaC approaches
 
 The diagram groups the main IaC approaches for cloud infrastructure, with examples from major cloud providers.
@@ -93,15 +102,6 @@ The diagram groups the main IaC approaches for cloud infrastructure, with exampl
 </figure>
 
 ## My choices
-
-See the diagram below for a summary of how I choose IaC tools on AWS.
-
-<figure class="iac-mindmap">
-  <picture>
-    <source media="(max-width: 760px)" srcset="/diagrams/aws-iac-choices-compact.svg" width="420" height="622" />
-    <img class="iac-mindmap-image" src="/diagrams/aws-iac-choices.svg" width="1190" height="464" alt="AWS IaC decision diagram. For customer environments, consider Pulumi when you need to control the deployment workflow. Use StackSets for standard rollouts of the same CloudFormation template across accounts or Regions, and OpenTofu/Terraform for other standard customer deployments. For in-house environments, use StackSets for account bootstrapping, resource-specific controllers for application resources with a shared lifecycle on Kubernetes, and OpenTofu/Terraform for other resources." draggable="false" />
-  </picture>
-</figure>
 
 ### OpenTofu/Terraform: my go-to default
 

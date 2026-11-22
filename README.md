@@ -41,8 +41,8 @@ Write your article here using Markdown.
 The filename becomes the URL: `/articles/my-first-article/`.
 Nested folders work too. Draft articles (`draft: true`) are visible locally with
 `npm run dev`, but excluded from the production website, article lists, and RSS.
-Future dates do not schedule publication;
-use the draft flag to keep unfinished articles private.
+Anyone with access to the repository can still read the draft Markdown.
+Future dates do not schedule publication.
 
 Headings generate a table of contents. Fenced code blocks support syntax
 highlighting; include a language such as `bash`, `python`, or `typescript`.
