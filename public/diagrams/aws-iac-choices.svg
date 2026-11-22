@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1190" height="464" viewBox="0 0 1190 464" role="img" aria-labelledby="title desc">
+<title id="title">Choosing infrastructure as code for AWS</title>
+<desc id="desc">Decision paths for in-house and customer environments lead to four recommendations in the Outcomes panel. Purple marks the two used in both environments: CloudFormation StackSets and OpenTofu or Terraform.</desc>
+<defs><marker id="arrow-clients" viewBox="0 0 10 10" markerWidth="9" markerHeight="9" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 9 5 0 10Z" fill="#5378ad"/></marker><marker id="arrow-resources" viewBox="0 0 10 10" markerWidth="9" markerHeight="9" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 9 5 0 10Z" fill="#627e53"/></marker></defs>
+<rect width="100%" height="100%" fill="#fbfaf7"/>
+<g font-family="DM Sans, system-ui, sans-serif">
+<rect x="16" y="16" width="533" height="432" rx="16" fill="#fffdfa" stroke="#a7aa9d" stroke-width="2"/><rect x="40" y="38" width="4" height="16" rx="2" fill="#627e53"/><text x="53" y="52" fill="#34492a" font-size="20" font-weight="700">In-house environments</text>
+<rect x="590" y="16" width="253" height="432" rx="16" fill="#fffdfa" stroke="#a7aa9d" stroke-width="2"/><rect x="614" y="38" width="4" height="16" rx="2" fill="#76638c"/><text x="627" y="52" fill="#514065" font-size="20" font-weight="700">Outcomes</text>
+<rect x="861" y="16" width="313" height="432" rx="16" fill="#fffdfa" stroke="#a7aa9d" stroke-width="2"/><rect x="885" y="38" width="4" height="16" rx="2" fill="#5378ad"/><text x="898" y="52" fill="#2a4b75" font-size="20" font-weight="700">Customer environments</text>
+<path d="M146 103 L146 90 Q146 78 158 78 L705 78 Q717 78 717 90 L717 103" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M250 133 L320 133" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M491 163 L491 170 Q491 177 498 177 L641 177 Q653 177 653 189 L653 216" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M424 163 L424 217" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M320 247 L250 247" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M527 246 L611 246" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M146 277 L146 396 Q146 408 158 408 L611 408" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M222 277 L222 286.5 Q222 296 231.5 296 L659 296 Q669 296 669 286 L669 276" fill="none" stroke="#627e53" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-resources)"/>
+<path d="M1021 163 L1021 322 Q1021 334 1009 334 L822 334" fill="none" stroke="#5378ad" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-clients)"/>
+<path d="M894 133 L822 133" fill="none" stroke="#5378ad" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-clients)"/>
+<path d="M850 133 L850 234 Q850 246 838 246 L822 246" fill="none" stroke="#5378ad" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow-clients)"/>
+<rect x="42" y="103" width="208" height="60" rx="11" fill="#e9f2e3" stroke="#627e53" stroke-width="1"/><rect x="54" y="94" width="64" height="18" rx="9" fill="#34492a" stroke="none" stroke-width="1"/><text x="86" y="107" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Start here</text><text x="146" y="128.28" text-anchor="middle" font-size="17" font-weight="700" fill="#283229"><tspan x="146" dy="0">Bootstrapping</tspan><tspan x="146" dy="21">AWS accounts?</tspan></text>
+<rect x="320" y="103" width="207" height="60" rx="11" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/><text x="423.5" y="128.28" text-anchor="middle" font-size="17" font-weight="600" fill="#283229"><tspan x="423.5" dy="0">What kind of</tspan><tspan x="423.5" dy="21">resources?</tspan></text>
+<rect x="320" y="217" width="207" height="60" rx="11" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/><text x="423.5" y="252.78" text-anchor="middle" font-size="17" font-weight="600" fill="#283229"><tspan x="423.5" dy="0">App on Kubernetes?</tspan></text>
+<rect x="42" y="217" width="208" height="60" rx="11" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/><text x="146" y="242.28" text-anchor="middle" font-size="17" font-weight="600" fill="#283229"><tspan x="146" dy="0">Shares the app’s</tspan><tspan x="146" dy="21">lifecycle?</tspan></text>
+<rect x="611" y="103" width="211" height="60" rx="11" fill="#584377" stroke="#d8cfe4" stroke-width="1"/><text x="716.5" y="128.28" text-anchor="middle" font-size="17" font-weight="700" fill="#fff"><tspan x="716.5" dy="0">CloudFormation</tspan><tspan x="716.5" dy="21">StackSets</tspan></text>
+<rect x="611" y="216" width="211" height="60" rx="11" fill="#584377" stroke="#d8cfe4" stroke-width="1"/><text x="716.5" y="251.78" text-anchor="middle" font-size="17" font-weight="700" fill="#fff"><tspan x="716.5" dy="0">OpenTofu / Terraform</tspan></text>
+<rect x="611" y="304" width="211" height="60" rx="11" fill="#285799" stroke="#cbd8ec" stroke-width="1"/><text x="716.5" y="339.78" text-anchor="middle" font-size="17" font-weight="700" fill="#fff"><tspan x="716.5" dy="0">Pulumi</tspan></text>
+<rect x="611" y="378" width="211" height="60" rx="11" fill="#34582d" stroke="#cbd6c1" stroke-width="1"/><text x="716.5" y="406.78" text-anchor="middle" font-size="17" font-weight="700" fill="#fff"><tspan x="716.5" dy="0">Resource controllers</tspan></text><text x="716.5" y="426.78" text-anchor="middle" font-size="12" fill="#eef4ec">e.g. ExternalDNS</text>
+<rect x="894" y="103" width="253" height="60" rx="11" fill="#e8f0fe" stroke="#5378ad" stroke-width="1"/><rect x="906" y="94" width="64" height="18" rx="9" fill="#2a4b75" stroke="none" stroke-width="1"/><text x="938" y="107" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">Start here</text><text x="1020.5" y="128.28" text-anchor="middle" font-size="17" font-weight="700" fill="#283229"><tspan x="1020.5" dy="0">Do you need to control</tspan><tspan x="1020.5" dy="21">the deployment workflow?</tspan></text>
+<rect x="269" y="67.5" width="32" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="285" y="82.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">Yes</text>
+<rect x="272.5" y="122.5" width="25" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="285" y="137.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">No</text>
+<rect x="480" y="166.5" width="64" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="512" y="181.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">Platform</text>
+<rect x="382" y="179.5" width="84" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="424" y="194.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">Application</text>
+<rect x="269" y="236.5" width="32" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="285" y="251.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">Yes</text>
+<rect x="557.5" y="235.5" width="25" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="570" y="250.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">No</text>
+<rect x="269" y="397.5" width="32" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="285" y="412.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">Yes</text>
+<rect x="402.5" y="285.5" width="25" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd6c1" stroke-width="1"/>
+<text x="415" y="300.08" text-anchor="middle" font-size="12" font-weight="600" fill="#34492a">No</text>
+<rect x="1005" y="235.5" width="32" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd8ec" stroke-width="1"/>
+<text x="1021" y="250.08" text-anchor="middle" font-size="12" font-weight="600" fill="#2a4b75">Yes</text>
+<rect x="864.5" y="122.5" width="25" height="21" rx="10.5" fill="#fdfdfa" stroke="#cbd8ec" stroke-width="1"/>
+<text x="877" y="137.08" text-anchor="middle" font-size="12" font-weight="600" fill="#2a4b75">No</text>
+</g></svg>
