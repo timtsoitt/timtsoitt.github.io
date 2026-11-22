@@ -1,0 +1,146 @@
+{
+  "nodes": [
+    {
+      "id": "own",
+      "label": "In-house\nenvironments",
+      "branch": "resources",
+      "kind": "branch"
+    },
+    {
+      "id": "bootstrap",
+      "label": "Bootstrapping\nAWS accounts?",
+      "branch": "resources"
+    },
+    {
+      "id": "stacksets",
+      "label": "CloudFormation\nStackSets",
+      "branch": "resources",
+      "kind": "outcome"
+    },
+    {
+      "id": "resources",
+      "label": "What kind of\nresources?",
+      "branch": "resources"
+    },
+    {
+      "id": "where",
+      "label": "App on Kubernetes?",
+      "branch": "resources"
+    },
+    {
+      "id": "lifecycle",
+      "label": "Shares the app’s\nlifecycle?",
+      "branch": "resources"
+    },
+    {
+      "id": "controllers",
+      "label": "Resource controllers",
+      "branch": "resources",
+      "kind": "outcome",
+      "caption": "e.g. ExternalDNS"
+    },
+    {
+      "id": "clients",
+      "label": "Customer\nenvironments",
+      "branch": "clients",
+      "kind": "branch"
+    },
+    {
+      "id": "client",
+      "label": "Do you need to control\nthe deployment workflow?",
+      "branch": "clients"
+    },
+    {
+      "id": "pulumi",
+      "label": "Pulumi",
+      "branch": "clients",
+      "kind": "outcome"
+    },
+    {
+      "id": "terraform",
+      "label": "OpenTofu / Terraform",
+      "branch": "default",
+      "kind": "outcome"
+    }
+  ],
+  "edges": [
+    {
+      "source": "own",
+      "target": "bootstrap",
+      "label": "",
+      "branch": "resources"
+    },
+    {
+      "source": "bootstrap",
+      "target": "stacksets",
+      "label": "Yes",
+      "branch": "resources"
+    },
+    {
+      "source": "bootstrap",
+      "target": "resources",
+      "label": "No",
+      "branch": "resources"
+    },
+    {
+      "source": "resources",
+      "target": "terraform",
+      "label": "Platform",
+      "branch": "resources"
+    },
+    {
+      "source": "resources",
+      "target": "where",
+      "label": "Application",
+      "branch": "resources"
+    },
+    {
+      "source": "where",
+      "target": "lifecycle",
+      "label": "Yes",
+      "branch": "resources"
+    },
+    {
+      "source": "where",
+      "target": "terraform",
+      "label": "No",
+      "branch": "resources"
+    },
+    {
+      "source": "lifecycle",
+      "target": "controllers",
+      "label": "Yes",
+      "branch": "resources"
+    },
+    {
+      "source": "lifecycle",
+      "target": "terraform",
+      "label": "No",
+      "branch": "resources"
+    },
+    {
+      "source": "clients",
+      "target": "client",
+      "label": "",
+      "branch": "clients"
+    },
+    {
+      "source": "client",
+      "target": "pulumi",
+      "label": "Yes",
+      "branch": "clients"
+    },
+    {
+      "source": "client",
+      "target": "stacksets",
+      "label": "No",
+      "branch": "clients"
+    },
+    {
+      "source": "client",
+      "target": "terraform",
+      "label": "No",
+      "branch": "clients"
+    }
+  ]
+}
