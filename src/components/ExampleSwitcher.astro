@@ -1,0 +1,90 @@
+---
+interface Props {
+  label: string;
+  options: { id: string; label: string }[];
+}
+const { label, options } = Astro.props;
+---
+
+<div class="examples" data-example-switcher>
+  <div class="controls" role="group" aria-label={label} hidden>
+    {options.map(({ id, label }) => (
+      <button type="button" aria-controls={id} aria-pressed="false">
+        {label}
+      </button>
+    ))}
+  </div>
+  <slot />
+</div>
+
+<script>
+  for (const group of document.querySelectorAll<HTMLElement>(
+    "[data-example-switcher]",
+  )) {
+    const controls = group.querySelector<HTMLElement>(".controls")!;
+    const buttons = [...controls.querySelectorAll("button")];
+    const panels = buttons.map((button) =>
+      document.getElementById(button.getAttribute("aria-controls")!)!,
+    );
+    function select(index: number) {
+      panels.forEach((panel, i) => (panel.hidden = i !== index));
+      buttons.forEach((button, i) =>
+        button.setAttribute("aria-pressed", String(i === index)),
+      );
+      panels[index].dispatchEvent(
+        new Event("example-selected", { bubbles: true }),
+      );
+    }
+    function fragmentIndex() {
+      return panels.findIndex((panel) => "#" + panel.id === location.hash);
+    }
+    select(Math.max(0, fragmentIndex()));
+    controls.hidden = false;
+    buttons.forEach((button, i) =>
+      button.addEventListener("click", () => {
+        select(i);
+        history.replaceState(history.state, "", "#" + panels[i].id);
+      }),
+    );
+    window.addEventListener("hashchange", () => {
+      const index = fragmentIndex();
+      if (index >= 0) {
+        select(index);
+        panels[index].scrollIntoView();
+      }
+    });
+  }
+</script>
+
+<style>
+  .controls:not([hidden]) {
+    display: flex;
+    gap: 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  button {
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+    padding: 0.55rem 0;
+    color: var(--muted);
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    cursor: pointer;
+  }
+  button[aria-pressed="true"] {
+    color: var(--ink);
+    border-color: var(--green);
+  }
+  button:focus-visible {
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+  .examples :global(section h4) {
+    margin: 1.4rem 0 0.6rem;
+  }
+  .examples :global(.code-example) {
+    margin-top: 0;
+  }
+</style>

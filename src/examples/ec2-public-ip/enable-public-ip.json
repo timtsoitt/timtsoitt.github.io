@@ -1,0 +1,18 @@
+{
+  "resource_changes": [
+    {
+      "address": "aws_instance.example",
+      "mode": "managed",
+      "type": "aws_instance",
+      "change": {
+        "actions": ["delete", "create"],
+        "before": {
+          "associate_public_ip_address": false
+        },
+        "after": {
+          "associate_public_ip_address": true
+        }
+      }
+    }
+  ]
+}

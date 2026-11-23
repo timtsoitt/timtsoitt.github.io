@@ -5,7 +5,7 @@ Write articles in Markdown, with optional MDX for custom components.
 
 ## Local development
 
-Use Node.js 24 (see `.nvmrc`).
+Use Node.js 24 (see `.nvmrc`) and the [OPA CLI](https://www.openpolicyagent.org/docs#running-opa) (CI uses 1.22.4). Starting the dev server or building the site compiles the Terraform article’s two Rego examples to WebAssembly. After editing a policy, restart the dev server to recompile it.
 
 ```sh
 npm install

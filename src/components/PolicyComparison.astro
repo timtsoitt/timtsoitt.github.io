@@ -1,0 +1,155 @@
+---
+import ExampleSwitcher from "./ExampleSwitcher.astro";
+import { Code } from "astro:components";
+import tagPlan from "../examples/ec2-public-ip/tag-change.json?raw";
+import publicIpPlan from "../examples/ec2-public-ip/enable-public-ip.json?raw";
+import oldModule from "../examples/ec2-public-ip/old.wasm?url";
+import rewrittenModule from "../examples/ec2-public-ip/rewritten.wasm?url";
+
+const cases = [
+  {
+    label: "Change a tag",
+    title: "A tag change should pass",
+    id: "a-tag-change-should-pass",
+    plan: tagPlan,
+    expected: ["Reject", "Pass"],
+  },
+  {
+    label: "Enable a public IP",
+    title: "Enabling a public IP should fail",
+    id: "enabling-a-public-ip-should-fail",
+    plan: publicIpPlan,
+    expected: ["Reject", "Reject"],
+  },
+];
+---
+
+<div
+  id="run-the-ec2-policies"
+  data-policy-comparison
+  data-modules={JSON.stringify([oldModule, rewrittenModule])}
+>
+  <ExampleSwitcher label="Choose a Terraform plan" options={cases}>
+    {cases.map((c, i) => (
+      <section id={c.id} data-case>
+        <h4>{c.title}</h4>
+        <div class="code-example">
+          <div class="code-example-text">
+            {i === 0 ? <slot name="tag" /> : <slot name="public-ip" />}
+            <dl aria-label="Policy decisions">
+              <div>
+                <dt>
+                  <a href="#before-check-the-resulting-value">Old policy</a>
+                </dt>
+                <dd>{c.expected[0]}</dd>
+              </div>
+              <div>
+                <dt>
+                  <a href="#after-check-what-the-change-introduces">
+                    Rewritten policy
+                  </a>
+                </dt>
+                <dd>{c.expected[1]}</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="code-example-code">
+            <p class="code-example-label">
+              Terraform plan · <code>aws_instance.example</code>
+            </p>
+            <Code code={c.plan.trimEnd()} lang="json" />
+          </div>
+        </div>
+      </section>
+    ))}
+  </ExampleSwitcher>
+  <p role="status"></p>
+</div>
+
+<script>
+  for (const demo of document.querySelectorAll<HTMLElement>(
+    "[data-policy-comparison]",
+  )) {
+    const cases = [...demo.querySelectorAll<HTMLElement>("[data-case]")];
+    const status = demo.querySelector('[role="status"]')!;
+    async function initialize() {
+      try {
+        const { loadPolicy } = await import("@open-policy-agent/opa-wasm");
+        const urls: string[] = JSON.parse(demo.dataset.modules!);
+        const policies = await Promise.all(
+          urls.map(async (url) => {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Policy unavailable");
+            return loadPolicy(await response.arrayBuffer());
+          }),
+        );
+        const plans = cases.map((c) =>
+          JSON.parse(c.querySelector("pre code")!.textContent!),
+        );
+        function evaluate(panel: HTMLElement) {
+          const decisions = policies.map((policy) => {
+            const messages = policy.evaluate(plans[cases.indexOf(panel)])[0]
+              ?.result;
+            if (!Array.isArray(messages))
+              throw new Error("Missing policy decision");
+            return messages.length ? "Reject" : "Pass";
+          });
+          panel
+            .querySelectorAll("dd")
+            .forEach((cell, i) => (cell.textContent = decisions[i]));
+          status.textContent =
+            panel.querySelector("h4")!.textContent +
+            ". Old policy: " +
+            decisions[0] +
+            ". Rewritten policy: " +
+            decisions[1] +
+            ".";
+        }
+        evaluate(cases.find((panel) => !panel.hidden)!);
+        demo.addEventListener("example-selected", (event) =>
+          evaluate(event.target as HTMLElement),
+        );
+      } catch {
+        status.classList.add("error");
+        status.textContent =
+          "Live evaluation is unavailable. The plans show their expected decisions.";
+      }
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          void initialize();
+        }
+      },
+      { rootMargin: "400px" },
+    );
+    observer.observe(demo);
+  }
+</script>
+
+<style>
+  dl {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 2rem;
+    margin: 1rem 0;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--line);
+  }
+  dt {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  dd {
+    margin: 0;
+    font-weight: 700;
+  }
+  [role="status"]:not(.error) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+</style>

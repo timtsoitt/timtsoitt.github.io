@@ -53,6 +53,15 @@ detail to each article’s topic, purpose, and audience.
 - Keep text-only passages full width. Reuse `code-example-text` on the left and
   `code-example-code` on the right for paired explanations and snippets. They
   stack on mobile. Place the heading above the pair.
+- For comparisons between code versions or input scenarios, use
+  [ExampleSwitcher](../components/ExampleSwitcher.astro). Label each choice
+  with the version or action it selects. Keep its explanation, code, and any
+  result together so they change as one example.
+- When a worked example demonstrates a code change, show the change first and
+  the example immediately after it. Follow the Rego and EC2 sections in the
+  [Terraform article](articles/why-i-had-to-rewrite-100-security-policies-for-terraform.mdx#the-rego-change).
+  Give each variant a stable fragment ID and keep all variants readable in
+  sequence without JavaScript.
 - Use padding and a divider to separate panel explanations from the snippets.
   Put each `code-example-label` directly above its code block and useful captions
   below it. Reserve callouts for intentional asides. Give every card and callout
