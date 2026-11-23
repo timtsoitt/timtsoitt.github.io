@@ -5,19 +5,22 @@ import { site } from "../site";
 interface Props {
   title?: string;
   description?: string;
-  article?: { date: Date; tags: string[] };
+  previewImage?: { src: string; alt: string };
+  article?: { date: Date; updatedDate?: Date; tags: string[] };
   noindex?: boolean;
 }
 const {
   title,
   description = site.description,
+  previewImage,
   article,
   noindex = false,
 } = Astro.props;
 const pageTitle = title
-  ? `${title} — ${site.title}`
-  : `${site.name} — ${site.title}`;
+  ? `${title} — ${site.name}`
+  : `${site.name} — Security, Infrastructure & Software`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+const imageUrl = previewImage && new URL(previewImage.src, Astro.site).href;
 const path = Astro.url.pathname;
 const home = new URL("/", Astro.site).href;
 const authorUrl = new URL("/about/", Astro.site).href;
@@ -54,6 +57,10 @@ const structuredData = {
       description,
       inLanguage: "en",
       isPartOf: { "@id": `${home}#website` },
+      ...(article && {
+        mainEntity: { "@id": `${canonical.href}#article` },
+        breadcrumb: { "@id": `${canonical.href}#breadcrumb` },
+      }),
       ...(path === "/about/" && { mainEntity: { "@id": author["@id"] } }),
     },
     ...(article
@@ -63,13 +70,36 @@ const structuredData = {
             "@id": `${canonical.href}#article`,
             url: canonical.href,
             headline: title,
+            ...(imageUrl && { image: imageUrl }),
             description,
             datePublished: article.date.toISOString(),
+            ...(article.updatedDate && {
+              dateModified: article.updatedDate.toISOString(),
+            }),
             author,
             inLanguage: "en",
             keywords: article.tags,
             mainEntityOfPage: { "@id": `${canonical.href}#webpage` },
             isPartOf: { "@id": `${home}#website` },
+          },
+          {
+            "@type": "BreadcrumbList",
+            "@id": `${canonical.href}#breadcrumb`,
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: home },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Writing",
+                item: new URL("/articles/", Astro.site).href,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: title,
+                item: canonical.href,
+              },
+            ],
           },
         ]
       : []),
@@ -108,12 +138,29 @@ const structuredData = {
           content={article.date.toISOString()}
         />
         <meta property="article:author" content={authorUrl} />
+        {article.updatedDate && (
+          <meta
+            property="article:modified_time"
+            content={article.updatedDate.toISOString()}
+          />
+        )}
         {article.tags.map((tag) => (
           <meta property="article:tag" content={tag} />
         ))}
       </>
     )}
-    <meta name="twitter:card" content="summary" />
+    {previewImage && imageUrl && (
+      <>
+        <meta property="og:image" content={imageUrl} />
+        <meta property="og:image:alt" content={previewImage.alt} />
+        <meta name="twitter:image" content={imageUrl} />
+        <meta name="twitter:image:alt" content={previewImage.alt} />
+      </>
+    )}
+    <meta
+      name="twitter:card"
+      content={imageUrl ? "summary_large_image" : "summary"}
+    />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     {!noindex && (

@@ -44,6 +44,11 @@ Nested folders work too. Draft articles (`draft: true`) are visible locally with
 Anyone with access to the repository can still read the draft Markdown.
 Future dates do not schedule publication.
 
+After a substantive revision, add `updatedDate: 2026-11-23` to the frontmatter.
+It must be on or after `date`. The article displays this revision date and includes
+it in structured data and social metadata; keep `date` as the original publication
+date.
+
 Headings generate a table of contents. Fenced code blocks support syntax
 highlighting; include a language such as `bash`, `python`, or `typescript`.
 Put images in `public/images/` and use `![Alt text](/images/example.png)`.

@@ -23,7 +23,12 @@ const contents = headings.filter(({ depth }) =>
 <Base
   title={article.data.title}
   description={article.data.description}
-  article={{ date: article.data.date, tags: article.data.tags }}
+  previewImage={article.data.previewImage}
+  article={{
+    date: article.data.date,
+    updatedDate: article.data.updatedDate,
+    tags: article.data.tags,
+  }}
   noindex={article.data.draft}
 >
   <article class="post">
@@ -40,6 +45,17 @@ const contents = headings.filter(({ depth }) =>
           <time datetime={article.data.date.toISOString()}>
             {formatDate(article.data.date)}
           </time>
+          {article.data.updatedDate && (
+            <>
+              <span>·</span>
+              <span>
+                Updated{" "}
+                <time datetime={article.data.updatedDate.toISOString()}>
+                  {formatDate(article.data.updatedDate)}
+                </time>
+              </span>
+            </>
+          )}
           <span>·</span>
           <span>{readingTime(article.body)} min read</span>
           <ViewCount />
