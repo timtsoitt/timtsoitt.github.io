@@ -1,0 +1,20 @@
+{
+  "resource_changes": [
+    {
+      "address": "aws_instance.example",
+      "mode": "managed",
+      "type": "aws_instance",
+      "change": {
+        "actions": ["update"],
+        "before": {
+          "associate_public_ip_address": true,
+          "tags": { "Owner": "platform" }
+        },
+        "after": {
+          "associate_public_ip_address": true,
+          "tags": { "Owner": "infrastructure" }
+        }
+      }
+    }
+  ]
+}

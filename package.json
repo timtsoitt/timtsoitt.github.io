@@ -10,13 +10,16 @@
     "check": "astro check",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
-    "diagram:iac": "node scripts/generate-iac-mindmap.mjs"
+    "diagram:iac": "node scripts/generate-iac-mindmap.mjs",
+    "prebuild": "node scripts/build-ec2-policies.mjs",
+    "predev": "node scripts/build-ec2-policies.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.10",
     "@astrojs/mdx": "^8.1.6",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.5",
+    "@open-policy-agent/opa-wasm": "^1.10.0",
     "astro": "^7.4.12"
   },
   "devDependencies": {
