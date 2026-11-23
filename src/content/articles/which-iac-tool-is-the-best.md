@@ -2,6 +2,9 @@
 title: "Which IaC tool is the best?"
 description: "OpenTofu/Terraform is my default. I switch tools when the job calls for it."
 date: 2026-11-23
+previewImage:
+  src: /diagrams/aws-iac-choices.png
+  alt: "Decision paths for choosing infrastructure as code tools in AWS environments managed in-house or for customers."
 tags:
   [
     OpenTofu,
